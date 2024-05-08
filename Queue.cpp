@@ -2,38 +2,30 @@
 
 using namespace std;
 
-
+template <typename T>
 class QueueNode {
 public:
-    int data;
+    T data;
     QueueNode* next;
 
-    QueueNode(int d) {
-        data = d;
-        next = nullptr;
-    }
+    QueueNode(T d) : data(d), next(nullptr) {}
 };
 
+template <typename T>
 class Queue {
 private:
-    QueueNode* front;
-    QueueNode* rear;
+    QueueNode<T>* front;
+    QueueNode<T>* rear;
 
 public:
-
-    Queue() {
-        front = nullptr;
-        rear = nullptr;
-    }
+    Queue() : front(nullptr), rear(nullptr) {}
 
     ~Queue() {
-        while (!isEmpty()) {
-            dequeue();
-        }
+        clear();
     }
 
-    void enqueue(int data) {
-        QueueNode* newNode = new QueueNode(data);
+    void enqueue(T data) {
+        QueueNode<T>* newNode = new QueueNode<T>(data);
         if (isEmpty()) {
             front = newNode;
             rear = newNode;
@@ -42,34 +34,33 @@ public:
             rear = newNode;
         }
     }
+
     void dequeue() {
         if (!isEmpty()) {
-            QueueNode* temp = front;
+            QueueNode<T>* temp = front;
             front = front->next;
             delete temp;
         } else {
-            cout << "The queue is empty. Cannot dequeue." << endl;
+            std::cout << "The queue is empty. Cannot dequeue." << std::endl;
         }
     }
 
-
-    bool isEmpty() {
+    bool isEmpty() const {
         return front == nullptr;
     }
 
-
-    int getFront() {
+    T getFront() const {
         if (!isEmpty()) {
             return front->data;
         } else {
-            cout << "The queue is empty." << endl;
-            return -1; // Sentinel value
+            std::cout << "The queue is empty." << std::endl;
+            return T(); // Sentinel value
         }
     }
 
-    int size() {
+    int size() const {
         int count = 0;
-        QueueNode* current = front;
+        QueueNode<T>* current = front;
         while (current != nullptr) {
             count++;
             current = current->next;
@@ -88,7 +79,7 @@ public:
             return *this;
         }
         clear(); // Limpiar la cola actual
-        QueueNode* current = other.front;
+        QueueNode<T>* current = other.front;
         while (current != nullptr) {
             enqueue(current->data);
             current = current->next;
@@ -96,27 +87,33 @@ public:
         return *this;
     }
 };
-
 int main() {
+    Queue<int> myQueue;
 
-    Queue queue;
+    myQueue.enqueue(10);
+    myQueue.enqueue(20);
+    myQueue.enqueue(30);
 
+    std::cout << "Size of the queue: " << myQueue.size() << std::endl;
 
-    queue.enqueue(10);
-    queue.enqueue(20);
-    queue.enqueue(30);
+    std::cout << "Front element: " << myQueue.getFront() << std::endl;
+    myQueue.dequeue();
 
-    Queue queue2;
-    queue2 = queue;
-    queue2.enqueue(30);
+    std::cout << "Front element after dequeue: " << myQueue.getFront() << std::endl;
 
-    cout << "Front element: " << queue2.getFront() << endl;
+    if (myQueue.isEmpty()) {
+        std::cout << "The queue is empty." << std::endl;
+    } else {
+        std::cout << "The queue is not empty." << std::endl;
+    }
 
-    cout << "Front element: " << queue.getFront() << endl;
+    myQueue.clear();
 
-    queue.dequeue();
-
-    cout << "Front element after dequeue: " << queue.getFront() << endl;
+    if (myQueue.isEmpty()) {
+        std::cout << "The queue is empty after clearing." << std::endl;
+    } else {
+        std::cout << "The queue is not empty after clearing." << std::endl;
+    }
 
     return 0;
 }
