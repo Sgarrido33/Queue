@@ -66,6 +66,35 @@ public:
             return -1; // Sentinel value
         }
     }
+
+    int size() {
+        int count = 0;
+        QueueNode* current = front;
+        while (current != nullptr) {
+            count++;
+            current = current->next;
+        }
+        return count;
+    }
+
+    void clear() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    Queue& operator=(const Queue& other) {
+        if (this == &other) {
+            return *this;
+        }
+        clear(); // Limpiar la cola actual
+        QueueNode* current = other.front;
+        while (current != nullptr) {
+            enqueue(current->data);
+            current = current->next;
+        }
+        return *this;
+    }
 };
 
 int main() {
@@ -76,6 +105,12 @@ int main() {
     queue.enqueue(10);
     queue.enqueue(20);
     queue.enqueue(30);
+
+    Queue queue2;
+    queue2 = queue;
+    queue2.enqueue(30);
+
+    cout << "Front element: " << queue2.getFront() << endl;
 
     cout << "Front element: " << queue.getFront() << endl;
 
